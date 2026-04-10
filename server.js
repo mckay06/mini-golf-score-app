@@ -15,6 +15,8 @@ ensureStorage();
 app.use(express.json({ limit: '200kb' }));
 app.use('/mini-golf', express.static(publicDir, { extensions: ['html'] }));
 
+app.get('/', (_req, res) => { res.redirect('/mini-golf'); });
+
 app.get('/mini-golf', (_req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
