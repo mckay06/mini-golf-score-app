@@ -1,0 +1,17 @@
+{
+  "name": "Action Golf Scorecard",
+  "short_name": "Action Golf",
+  "start_url": "/mini-golf",
+  "display": "standalone",
+  "background_color": "#0c1312",
+  "theme_color": "#0f6a56",
+  "description": "Carte de score mobile pour le mini-golf VR Infini.",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

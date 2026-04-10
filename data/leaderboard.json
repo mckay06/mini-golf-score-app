@@ -1,0 +1,572 @@
+[
+  {
+    "id": "fakemnt55gpj-0",
+    "teamName": "Les Flamants Roses",
+    "players": [
+      {
+        "name": "Lucas",
+        "scores": [
+          2,
+          3,
+          2,
+          4,
+          3,
+          2,
+          3,
+          2
+        ],
+        "total": 21
+      },
+      {
+        "name": "Emma",
+        "scores": [
+          3,
+          2,
+          3,
+          2,
+          4,
+          3,
+          2,
+          3
+        ],
+        "total": 22
+      },
+      {
+        "name": "Nathan",
+        "scores": [
+          2,
+          4,
+          3,
+          3,
+          2,
+          3,
+          4,
+          2
+        ],
+        "total": 23
+      }
+    ],
+    "total": 66,
+    "submittedAt": "2026-04-10T15:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-1",
+    "teamName": "Les Requins du Green",
+    "players": [
+      {
+        "name": "Léa",
+        "scores": [
+          3,
+          4,
+          2,
+          3,
+          5,
+          3,
+          2,
+          4
+        ],
+        "total": 26
+      },
+      {
+        "name": "Hugo",
+        "scores": [
+          2,
+          3,
+          4,
+          3,
+          2,
+          4,
+          3,
+          3
+        ],
+        "total": 24
+      },
+      {
+        "name": "Chloé",
+        "scores": [
+          4,
+          3,
+          3,
+          2,
+          3,
+          2,
+          4,
+          3
+        ],
+        "total": 24
+      },
+      {
+        "name": "Tom",
+        "scores": [
+          3,
+          2,
+          3,
+          4,
+          2,
+          3,
+          3,
+          4
+        ],
+        "total": 24
+      }
+    ],
+    "total": 98,
+    "submittedAt": "2026-04-10T13:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-2",
+    "teamName": "Équipe Soleil",
+    "players": [
+      {
+        "name": "Mathis",
+        "scores": [
+          4,
+          3,
+          5,
+          3,
+          2,
+          4,
+          3,
+          4
+        ],
+        "total": 28
+      },
+      {
+        "name": "Jade",
+        "scores": [
+          3,
+          4,
+          3,
+          4,
+          3,
+          5,
+          4,
+          3
+        ],
+        "total": 29
+      },
+      {
+        "name": "Raphaël",
+        "scores": [
+          5,
+          3,
+          4,
+          2,
+          4,
+          3,
+          3,
+          5
+        ],
+        "total": 29
+      }
+    ],
+    "total": 86,
+    "submittedAt": "2026-04-10T11:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-3",
+    "teamName": "Les Invincibles",
+    "players": [
+      {
+        "name": "Camille",
+        "scores": [
+          2,
+          2,
+          3,
+          3,
+          2,
+          4,
+          3,
+          2
+        ],
+        "total": 21
+      },
+      {
+        "name": "Louis",
+        "scores": [
+          3,
+          3,
+          2,
+          4,
+          3,
+          2,
+          2,
+          3
+        ],
+        "total": 22
+      },
+      {
+        "name": "Manon",
+        "scores": [
+          2,
+          4,
+          3,
+          2,
+          3,
+          3,
+          4,
+          2
+        ],
+        "total": 23
+      },
+      {
+        "name": "Théo",
+        "scores": [
+          4,
+          2,
+          3,
+          3,
+          2,
+          3,
+          2,
+          4
+        ],
+        "total": 23
+      }
+    ],
+    "total": 89,
+    "submittedAt": "2026-04-10T09:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-4",
+    "teamName": "Les Étoiles Filantes",
+    "players": [
+      {
+        "name": "Inès",
+        "scores": [
+          3,
+          5,
+          4,
+          3,
+          4,
+          3,
+          5,
+          4
+        ],
+        "total": 31
+      },
+      {
+        "name": "Arthur",
+        "scores": [
+          4,
+          3,
+          5,
+          4,
+          3,
+          5,
+          3,
+          4
+        ],
+        "total": 31
+      },
+      {
+        "name": "Sarah",
+        "scores": [
+          3,
+          4,
+          3,
+          5,
+          4,
+          4,
+          3,
+          5
+        ],
+        "total": 31
+      }
+    ],
+    "total": 93,
+    "submittedAt": "2026-04-10T07:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-5",
+    "teamName": "Les Tontons Flingueurs",
+    "players": [
+      {
+        "name": "Paul",
+        "scores": [
+          5,
+          4,
+          3,
+          4,
+          5,
+          3,
+          4,
+          5
+        ],
+        "total": 33
+      },
+      {
+        "name": "Clara",
+        "scores": [
+          4,
+          5,
+          4,
+          3,
+          4,
+          5,
+          3,
+          4
+        ],
+        "total": 32
+      },
+      {
+        "name": "Enzo",
+        "scores": [
+          3,
+          4,
+          5,
+          4,
+          3,
+          4,
+          5,
+          3
+        ],
+        "total": 31
+      },
+      {
+        "name": "Zoé",
+        "scores": [
+          4,
+          3,
+          4,
+          5,
+          4,
+          3,
+          4,
+          5
+        ],
+        "total": 32
+      }
+    ],
+    "total": 128,
+    "submittedAt": "2026-04-10T05:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-6",
+    "teamName": "Les Pépites",
+    "players": [
+      {
+        "name": "Lina",
+        "scores": [
+          2,
+          3,
+          2,
+          3,
+          2,
+          3,
+          2,
+          3
+        ],
+        "total": 20
+      },
+      {
+        "name": "Jules",
+        "scores": [
+          3,
+          2,
+          3,
+          2,
+          3,
+          2,
+          3,
+          2
+        ],
+        "total": 20
+      },
+      {
+        "name": "Alice",
+        "scores": [
+          2,
+          2,
+          3,
+          3,
+          2,
+          2,
+          3,
+          3
+        ],
+        "total": 20
+      }
+    ],
+    "total": 60,
+    "submittedAt": "2026-04-10T03:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-7",
+    "teamName": "Les Champions du Putt",
+    "players": [
+      {
+        "name": "Axel",
+        "scores": [
+          4,
+          5,
+          3,
+          4,
+          6,
+          4,
+          3,
+          5
+        ],
+        "total": 34
+      },
+      {
+        "name": "Léna",
+        "scores": [
+          3,
+          4,
+          5,
+          3,
+          4,
+          5,
+          4,
+          3
+        ],
+        "total": 31
+      },
+      {
+        "name": "Gabriel",
+        "scores": [
+          5,
+          3,
+          4,
+          5,
+          3,
+          4,
+          5,
+          4
+        ],
+        "total": 33
+      },
+      {
+        "name": "Eva",
+        "scores": [
+          4,
+          4,
+          3,
+          5,
+          4,
+          3,
+          4,
+          5
+        ],
+        "total": 32
+      }
+    ],
+    "total": 130,
+    "submittedAt": "2026-04-10T01:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-8",
+    "teamName": "Équipe Arc-en-Ciel",
+    "players": [
+      {
+        "name": "Maëlys",
+        "scores": [
+          3,
+          3,
+          4,
+          3,
+          3,
+          4,
+          3,
+          3
+        ],
+        "total": 26
+      },
+      {
+        "name": "Ethan",
+        "scores": [
+          4,
+          3,
+          3,
+          4,
+          3,
+          3,
+          4,
+          3
+        ],
+        "total": 27
+      },
+      {
+        "name": "Louise",
+        "scores": [
+          3,
+          4,
+          3,
+          3,
+          4,
+          3,
+          3,
+          4
+        ],
+        "total": 27
+      }
+    ],
+    "total": 80,
+    "submittedAt": "2026-04-09T23:49:35.958Z"
+  },
+  {
+    "id": "fakemnt55gpj-9",
+    "teamName": "Les Fous du Golf",
+    "players": [
+      {
+        "name": "Noah",
+        "scores": [
+          6,
+          5,
+          4,
+          5,
+          6,
+          5,
+          4,
+          6
+        ],
+        "total": 41
+      },
+      {
+        "name": "Romane",
+        "scores": [
+          5,
+          6,
+          5,
+          4,
+          5,
+          6,
+          5,
+          4
+        ],
+        "total": 40
+      },
+      {
+        "name": "Adam",
+        "scores": [
+          4,
+          5,
+          6,
+          5,
+          4,
+          5,
+          6,
+          5
+        ],
+        "total": 40
+      },
+      {
+        "name": "Juliette",
+        "scores": [
+          5,
+          4,
+          5,
+          6,
+          5,
+          4,
+          5,
+          6
+        ],
+        "total": 40
+      }
+    ],
+    "total": 161,
+    "submittedAt": "2026-04-09T21:49:35.958Z"
+  }
+]
