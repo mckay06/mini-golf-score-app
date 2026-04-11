@@ -263,6 +263,7 @@ function goToNextStep() {
   renderSummary();
   showPanel('summary');
   saveDraft();
+  submitRound();
 }
 
 function adjustScore(delta) {
@@ -365,6 +366,8 @@ async function submitRound() {
     await loadLeaderboard();
   } catch (error) {
     setStatus(error.message, 'error');
+    elements.submitScore.classList.remove('hidden');
+    elements.editScore.classList.remove('hidden');
   } finally {
     elements.submitScore.disabled = false;
   }
