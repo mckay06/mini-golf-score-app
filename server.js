@@ -9,6 +9,13 @@ const dataDir = path.join(__dirname, 'data');
 const leaderboardFile = process.env.MINIGOLF_LEADERBOARD_FILE || path.join(dataDir, 'leaderboard.json');
 const holeCount = 8;
 const maxLeaderboardEntries = 100;
+const ADMIN_KEY = process.env.ADMIN_KEY || 'hydra';
+
+function requireAdmin(req, res, next) {
+  const auth = req.headers['authorization'] || '';
+  if (auth === `Bearer ${ADMIN_KEY}`) return next();
+  res.status(401).json({ error: 'Non autorisé.' });
+}
 
 ensureStorage();
 
@@ -78,6 +85,21 @@ app.post('/api/mini-golf/scores', (req, res) => {
     rank,
     leaderboard,
   });
+});
+
+app.get('/api/mini-golf/admin/scores', requireAdmin, (_req, res) => {
+  const rounds = readRounds();
+  res.json(rounds.map(toPublicRound));
+});
+
+app.delete('/api/mini-golf/scores/:id', requireAdmin, (req, res) => {
+  const rounds = readRounds();
+  const filtered = rounds.filter((r) => r.id !== req.params.id);
+  if (filtered.length === rounds.length) {
+    return res.status(404).json({ error: 'Score introuvable.' });
+  }
+  fs.writeFileSync(leaderboardFile, JSON.stringify(filtered, null, 2), 'utf8');
+  res.json({ ok: true });
 });
 
 if (require.main === module) {

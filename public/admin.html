@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Mini Golf VR Infini</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    body { font-family: system-ui, sans-serif; background: #0f0b1e; color: #e5e5f0; min-height: 100vh; padding: 32px 20px }
+    h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 24px; color: #fff }
+    .gate { max-width: 340px; margin: 80px auto; text-align: center }
+    .gate p { color: rgba(255,255,255,.5); font-size: 14px; margin-bottom: 16px }
+    input[type=password] { width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06); color: #fff; font-size: 15px; margin-bottom: 12px; outline: none }
+    input[type=password]:focus { border-color: #a855f7 }
+    .btn { padding: 11px 22px; border-radius: 999px; border: none; cursor: pointer; font-weight: 700; font-size: 14px }
+    .btn-primary { background: linear-gradient(90deg, #a855f7, #06b6d4); color: #0f0b1e }
+    .btn-danger { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.3) }
+    .btn-danger:hover { background: rgba(239,68,68,.3) }
+    .btn:disabled { opacity: .4; cursor: not-allowed }
+    #main { max-width: 700px; margin: 0 auto; display: none }
+    .entry { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 16px 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px }
+    .entry__info { flex: 1 }
+    .entry__name { font-weight: 700; color: #fff; font-size: 15px }
+    .entry__meta { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 3px }
+    .entry__total { font-size: 1.3rem; font-weight: 800; color: #a855f7; white-space: nowrap }
+    .msg { font-size: 13px; margin-bottom: 16px; padding: 10px 14px; border-radius: 8px }
+    .msg-err { background: rgba(239,68,68,.1); color: #f87171; border: 1px solid rgba(239,68,68,.25) }
+    .empty { color: rgba(255,255,255,.35); font-size: 14px; text-align: center; padding: 40px 0 }
+    .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px }
+    .count { font-size: 13px; color: rgba(255,255,255,.4) }
+    .section-title { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); margin: 28px 0 10px }
+    .recent-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px }
+    .recent-card { flex: 1; min-width: 140px; background: rgba(168,85,247,.07); border: 1px solid rgba(168,85,247,.2); border-radius: 12px; padding: 12px 14px }
+    .recent-card__team { font-weight: 700; font-size: 14px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+    .recent-card__players { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+    .recent-card__total { font-size: 1.1rem; font-weight: 800; color: #a855f7; margin-top: 6px }
+    .recent-card__date { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 2px }
+  </style>
+</head>
+<body>
+
+  <!-- Gate -->
+  <div class="gate" id="gate">
+    <h1>⛳ Admin Mini Golf</h1>
+    <p>Accès réservé. Entre le mot de passe admin.</p>
+    <input type="password" id="keyInput" placeholder="Mot de passe" autofocus>
+    <br>
+    <button class="btn btn-primary" onclick="login()">Accéder</button>
+    <div id="gateMsg"></div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+    <div class="top">
+      <h1>⛳ Scores — Mini Golf</h1>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="msg"></div>
+    <div class="section-title">Derniers scores</div>
+    <div class="recent-grid" id="recent"></div>
+    <div class="section-title">Tous les scores</div>
+    <div id="list"></div>
+  </div>
+
+  <script>
+    const keyInput = document.getElementById('keyInput');
+
+    keyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') login();
+    });
+
+    function login() {
+      const key = keyInput.value.trim();
+      if (!key) return;
+      sessionStorage.setItem('admin_key', key);
+      loadScores();
+    }
+
+    async function loadScores() {
+      const key = sessionStorage.getItem('admin_key');
+      const res = await fetch('/api/mini-golf/admin/scores', {
+        headers: { Authorization: `Bearer ${key}` }
+      });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem('admin_key');
+        document.getElementById('gateMsg').innerHTML = '<p style="color:#f87171;font-size:13px;margin-top:10px">Mot de passe incorrect.</p>';
+        return;
+      }
+
+      const rounds = await res.json();
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      renderRecent(rounds);
+      renderList(rounds);
+    }
+
+    function renderRecent(rounds) {
+      const recent = rounds
+        .slice()
+        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+        .slice(0, 5);
+      const el = document.getElementById('recent');
+      if (!recent.length) { el.innerHTML = '<div class="empty" style="padding:16px 0">Aucun score.</div>'; return; }
+      el.innerHTML = recent.map((r) => {
+        const players = r.players.map((p) => p.name).join(', ');
+        const date = new Date(r.submittedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return `
+          <div class="recent-card">
+            <div class="recent-card__team">${esc(r.teamName)}</div>
+            <div class="recent-card__players">${esc(players)}</div>
+            <div class="recent-card__total">${r.total} coups</div>
+            <div class="recent-card__date">${date}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function renderList(rounds) {
+      const list = document.getElementById('list');
+      document.getElementById('count').textContent = `${rounds.length} score${rounds.length !== 1 ? 's' : ''}`;
+
+      if (!rounds.length) {
+        list.innerHTML = '<div class="empty">Aucun score enregistré.</div>';
+        return;
+      }
+
+      list.innerHTML = rounds
+        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+        .map((r) => {
+          const date = new Date(r.submittedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+          const players = r.players.map((p) => p.name).join(', ');
+          return `
+            <div class="entry" id="entry-${r.id}">
+              <div class="entry__info">
+                <div class="entry__name">${esc(r.teamName)}</div>
+                <div class="entry__meta">${esc(players)} · ${date}</div>
+              </div>
+              <div class="entry__total">${r.total} coups</div>
+              <button class="btn btn-danger" onclick="deleteScore('${r.id}', this)">Supprimer</button>
+            </div>`;
+        }).join('');
+    }
+
+    async function deleteScore(id, btn) {
+      if (!confirm('Supprimer ce score ?')) return;
+      btn.disabled = true;
+      const key = sessionStorage.getItem('admin_key');
+      const res = await fetch(`/api/mini-golf/scores/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${key}` }
+      });
+
+      if (res.ok) {
+        document.getElementById(`entry-${id}`)?.remove();
+        const remaining = document.querySelectorAll('.entry').length;
+        document.getElementById('count').textContent = `${remaining} score${remaining !== 1 ? 's' : ''}`;
+        if (!remaining) document.getElementById('list').innerHTML = '<div class="empty">Aucun score enregistré.</div>';
+      } else {
+        btn.disabled = false;
+        setMsg('Erreur lors de la suppression.', true);
+      }
+    }
+
+    function setMsg(text, isErr) {
+      const el = document.getElementById('msg');
+      el.className = 'msg' + (isErr ? ' msg-err' : '');
+      el.textContent = text;
+      setTimeout(() => el.textContent = '', 3000);
+    }
+
+    function esc(str) {
+      return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Auto-login si clé déjà en session
+    if (sessionStorage.getItem('admin_key')) loadScores();
+  </script>
+</body>
+</html>
