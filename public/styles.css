@@ -521,6 +521,39 @@ select {
   line-height: 1.5;
 }
 
+.score-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.score-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--muted);
+}
+
+.score-box--best {
+  background: rgba(52,211,153,.18);
+  border-color: rgba(52,211,153,.4);
+  color: #34d399;
+}
+
+.score-box--worst {
+  background: rgba(255,122,122,.12);
+  border-color: rgba(255,122,122,.3);
+  color: #ff7a7a;
+}
+
 .submit-panel {
   display: grid;
   gap: 10px;

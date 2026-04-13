@@ -320,13 +320,23 @@ function renderSummary() {
   elements.summaryPlayers.textContent = `${state.players.length} joueur${state.players.length > 1 ? 's' : ''}`;
   elements.summaryTotal.textContent = total;
   elements.summaryGrid.innerHTML = state.players
-    .map((player) => `
-      <div class="summary-hole">
-        <span>${escapeHtml(player.name)}</span>
-        <strong>${getPlayerTotal(player)}</strong>
-        <p>${player.scores.map((score, index) => `P${index + 1}: ${score}`).join(' \u2022 ')}</p>
-      </div>
-    `)
+    .map((player) => {
+      const min = Math.min(...player.scores);
+      const max = Math.max(...player.scores);
+      const boxes = player.scores.map((score, index) => {
+        let cls = 'score-box';
+        if (score === min) cls += ' score-box--best';
+        else if (score === max) cls += ' score-box--worst';
+        return `<span class="${cls}" title="Piste ${index + 1}">${score}</span>`;
+      }).join('');
+      return `
+        <div class="summary-hole">
+          <span>${escapeHtml(player.name)}</span>
+          <strong>${getPlayerTotal(player)}</strong>
+          <div class="score-boxes">${boxes}</div>
+        </div>
+      `;
+    })
     .join('');
 }
 
