@@ -47,6 +47,7 @@
     .recent-card__team { font-weight: 700; font-size: 14px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
     .recent-card__players { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
     .recent-card__total { font-size: 1.1rem; font-weight: 800; color: #a855f7; margin-top: 6px }
+    .recent-card__rank { font-size: 12px; font-weight: 800; color: #a855f7; margin-top: 4px }
     .recent-card__date { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 2px }
   </style>
 </head>
@@ -108,6 +109,11 @@
       renderList(rounds);
     }
 
+    function getRank(rounds, id) {
+      const sorted = rounds.slice().sort((a, b) => a.total !== b.total ? a.total - b.total : new Date(a.submittedAt) - new Date(b.submittedAt));
+      return sorted.findIndex(r => r.id === id) + 1;
+    }
+
     function renderRecent(rounds) {
       const recent = rounds
         .slice()
@@ -118,11 +124,14 @@
       el.innerHTML = recent.map((r) => {
         const players = r.players.map((p) => p.name).join(', ');
         const date = new Date(r.submittedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        const rank = getRank(rounds, r.id);
+        const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
         return `
           <div class="recent-card">
             <div class="recent-card__team">${esc(r.teamName)}</div>
             <div class="recent-card__players">${esc(players)}</div>
             <div class="recent-card__total">${r.total} coups</div>
+            <div class="recent-card__rank">${medal ? medal + ' ' : ''}Top ${rank}</div>
             <div class="recent-card__date">${date}</div>
           </div>`;
       }).join('');
