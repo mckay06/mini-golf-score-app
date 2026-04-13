@@ -319,8 +319,11 @@ function renderSummary() {
   elements.summaryName.textContent = state.teamName;
   elements.summaryPlayers.textContent = `${state.players.length} joueur${state.players.length > 1 ? 's' : ''}`;
   elements.summaryTotal.textContent = total;
+  const bestTotal = Math.min(...state.players.map(getPlayerTotal));
   elements.summaryGrid.innerHTML = state.players
     .map((player) => {
+      const total = getPlayerTotal(player);
+      const isWinner = total === bestTotal;
       const min = Math.min(...player.scores);
       const max = Math.max(...player.scores);
       const boxes = player.scores.map((score, index) => {
@@ -330,9 +333,14 @@ function renderSummary() {
         return `<span class="${cls}" title="Piste ${index + 1}">${score}</span>`;
       }).join('');
       return `
-        <div class="summary-hole">
-          <span>${escapeHtml(player.name)}</span>
-          <strong>${getPlayerTotal(player)}</strong>
+        <div class="summary-hole${isWinner ? ' summary-hole--winner' : ''}">
+          <div class="summary-hole__header">
+            <span class="summary-hole__name">
+              ${isWinner ? '<span class="summary-hole__crown">🏆</span>' : ''}
+              ${escapeHtml(player.name)}
+            </span>
+            <span class="summary-hole__total">${total} coups</span>
+          </div>
           <div class="score-boxes">${boxes}</div>
         </div>
       `;

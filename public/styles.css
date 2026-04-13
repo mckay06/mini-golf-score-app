@@ -492,33 +492,52 @@ select {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .summary-hole {
-  padding: 14px;
+  padding: 16px 18px;
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   text-align: left;
 }
 
-.summary-hole span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.86rem;
+.summary-hole--winner {
+  background: rgba(52, 211, 153, 0.07);
+  border-color: rgba(52, 211, 153, 0.3);
 }
 
-.summary-hole strong {
+.summary-hole__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.summary-hole__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-hole__crown {
+  font-size: 14px;
+}
+
+.summary-hole__total {
   font-family: 'Syne', sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
 }
 
-.summary-hole p {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.5;
+.summary-hole--winner .summary-hole__total {
+  color: var(--accent-third);
 }
 
 .score-boxes {
