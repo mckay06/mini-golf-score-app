@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mini-golf-score-v11';
+const CACHE_NAME = 'mini-golf-score-v12';
 const ASSETS = [
   '/mini-golf',
   '/mini-golf/',
