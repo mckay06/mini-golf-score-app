@@ -29,6 +29,19 @@
     .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px }
     .count { font-size: 13px; color: rgba(255,255,255,.4) }
     .section-title { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.35); margin: 28px 0 10px }
+    .entry { flex-wrap: wrap }
+    .entry details { width: 100%; margin-top: 12px; border-top: 1px solid rgba(255,255,255,.07); padding-top: 12px }
+    .entry details summary { font-size: 12px; color: rgba(255,255,255,.4); cursor: pointer; user-select: none; list-style: none; display: flex; align-items: center; gap: 6px }
+    .entry details summary::before { content: '▶'; font-size: 9px; transition: transform .2s }
+    .entry details[open] summary::before { transform: rotate(90deg) }
+    .player-scores { margin-top: 10px; display: flex; flex-direction: column; gap: 8px }
+    .player-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+    .player-row__name { font-size: 13px; font-weight: 700; color: #fff; min-width: 80px }
+    .player-row__holes { display: flex; gap: 4px; flex-wrap: wrap }
+    .hole-score { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 6px; font-size: 12px; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.7) }
+    .hole-score--best { background: rgba(52,211,153,.15); border-color: rgba(52,211,153,.35); color: #34d399 }
+    .hole-score--worst { background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.25); color: #f87171 }
+    .player-row__total { font-size: 13px; font-weight: 800; color: #a855f7; margin-left: 4px }
     .recent-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 8px }
     .recent-card { flex: 1; min-width: 140px; background: rgba(168,85,247,.07); border: 1px solid rgba(168,85,247,.2); border-radius: 12px; padding: 12px 14px }
     .recent-card__team { font-weight: 700; font-size: 14px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
@@ -129,6 +142,18 @@
         .map((r) => {
           const date = new Date(r.submittedAt).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
           const players = r.players.map((p) => p.name).join(', ');
+          const playerDetails = r.players.map((p) => {
+            const min = Math.min(...p.scores);
+            const max = Math.max(...p.scores);
+            const holes = p.scores.map((s, i) => {
+              let cls = 'hole-score';
+              if (s === min) cls += ' hole-score--best';
+              else if (s === max) cls += ' hole-score--worst';
+              return `<span class="${cls}" title="Piste ${i+1}">${s}</span>`;
+            }).join('');
+            return `<div class="player-row"><span class="player-row__name">${esc(p.name)}</span><div class="player-row__holes">${holes}</div><span class="player-row__total">${p.total} coups</span></div>`;
+          }).join('');
+
           return `
             <div class="entry" id="entry-${r.id}">
               <div class="entry__info">
@@ -137,6 +162,10 @@
               </div>
               <div class="entry__total">${r.total} coups</div>
               <button class="btn btn-danger" onclick="deleteScore('${r.id}', this)">Supprimer</button>
+              <details>
+                <summary>Scores par joueur</summary>
+                <div class="player-scores">${playerDetails}</div>
+              </details>
             </div>`;
         }).join('');
     }
