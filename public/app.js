@@ -73,6 +73,8 @@ function cacheElements() {
   elements.statsBest = document.getElementById('stats-best');
   elements.decreaseScore = document.getElementById('decrease-score');
   elements.increaseScore = document.getElementById('increase-score');
+  elements.submitConfirm = document.getElementById('submit-confirm');
+  elements.viewRanking = document.getElementById('view-ranking');
   elements.resumeGame = document.getElementById('resume-game');
   elements.refreshLeaderboard = document.getElementById('refresh-leaderboard');
   elements.leaderboardUpdated = document.getElementById('leaderboard-updated');
@@ -100,6 +102,7 @@ function bindEvents() {
   });
   elements.decreaseScore.addEventListener('click', () => adjustScore(-1));
   elements.increaseScore.addEventListener('click', () => adjustScore(1));
+  elements.viewRanking.addEventListener('click', () => showPanel('success'));
   elements.resumeGame.addEventListener('click', resumeDraftGame);
   elements.refreshLeaderboard.addEventListener('click', () => {
     loadLeaderboard(true);
@@ -378,8 +381,8 @@ async function submitRound() {
     elements.successTitle.textContent = `Top ${result.rank}`;
     elements.successCopy.textContent = `${result.round.teamName}, votre total \u00e9quipe est de ${result.round.total} coups.`;
     clearDraft();
-    showPanel('success');
-    setStatus('Score enregistr\u00e9 dans le classement.', 'success');
+    elements.submitConfirm.classList.remove('hidden');
+    setStatus('', '');
     renderLeaderboard(result.leaderboard || []);
     await loadLeaderboard();
   } catch (error) {
@@ -652,6 +655,7 @@ function clearDraft() {
   delete drafts[sid];
   writeAllDrafts(drafts);
   elements.resumeGame.classList.add('hidden');
+  elements.submitConfirm.classList.add('hidden');
 }
 
 function readDraft() {

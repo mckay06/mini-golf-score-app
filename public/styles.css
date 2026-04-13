@@ -578,6 +578,22 @@ select {
   gap: 10px;
 }
 
+.submit-confirm {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  text-align: center;
+}
+
+.submit-confirm__check {
+  font-weight: 700;
+  color: var(--accent-third);
+  font-size: 1rem;
+}
+
 .status-message {
   min-height: 22px;
   margin: 0;
