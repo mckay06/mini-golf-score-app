@@ -39,6 +39,46 @@ Le test lance un serveur temporaire, injecte un score fictif dans un fichier tem
 - historique des derniers scores
 - manifest + service worker pour une sensation d'app web installable
 
+## Important : persistance en production
+
+Les scores sont stockes dans un fichier JSON. Par defaut :
+
+```text
+mini-golf-score-app/data/leaderboard.json
+```
+
+En local, ce fichier reste bien en memoire sur le disque. En ligne, il faut verifier l'hebergement :
+
+- si le serveur redemarre ou si l'app est redeployee sans disque/volume persistant, les scores peuvent revenir au fichier de depart du depot Git ;
+- si l'app tourne en serverless, le stockage fichier ne doit pas etre considere comme durable ;
+- pour un deploiement Node avec volume persistant, definir `MINIGOLF_LEADERBOARD_FILE` vers le fichier du volume, par exemple `/data/leaderboard.json` selon l'hebergeur ;
+- pour un deploiement sans volume persistant, remplacer le stockage fichier par une vraie base externe : Supabase, Firebase, PostgreSQL, MySQL/WordPress, etc.
+
+Deux limites sont configurables :
+
+```text
+MINIGOLF_MAX_STORED_ROUNDS=5000
+MINIGOLF_PUBLIC_RECENT_ROUNDS=50
+```
+
+Le classement public affiche le Top 5 du mois et les derniers scores du mois. L'admin `/mini-golf/admin.html` affiche tous les scores stockes.
+
+## Option recommandee : stockage WordPress
+
+Si le plugin WordPress `VR Infini Mini Golf Scores` est installe, l'app utilise par defaut :
+
+```text
+https://vrinfini.com/wp-json/vrinfini-minigolf/v1
+```
+
+Les scores sont alors stockes dans la base WordPress au lieu du disque Render. Le ZIP du plugin installe est genere localement dans le dossier :
+
+```text
+wordpress-plugins/vri-minigolf-scores-v2.zip
+```
+
+Installation : WordPress > Extensions > Ajouter une extension > Televerser une extension, puis activer. Un menu `Scores Mini Golf` apparait dans l'admin WordPress.
+
 ## Fichiers utiles
 
 - `mini-golf-score-app/server.js` : API Express + stockage JSON

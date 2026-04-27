@@ -8,7 +8,8 @@ const publicDir = path.join(__dirname, 'public');
 const dataDir = path.join(__dirname, 'data');
 const leaderboardFile = process.env.MINIGOLF_LEADERBOARD_FILE || path.join(dataDir, 'leaderboard.json');
 const holeCount = 8;
-const maxLeaderboardEntries = 100;
+const maxStoredRounds = readPositiveIntEnv('MINIGOLF_MAX_STORED_ROUNDS', 5000);
+const publicRecentRounds = readPositiveIntEnv('MINIGOLF_PUBLIC_RECENT_ROUNDS', 50);
 const ADMIN_KEY = process.env.ADMIN_KEY || 'hydra';
 
 function requireAdmin(req, res, next) {
@@ -49,7 +50,7 @@ app.get('/api/mini-golf/leaderboard', (_req, res) => {
   const recent = monthlyRounds
     .slice()
     .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
-    .slice(0, 8)
+    .slice(0, publicRecentRounds)
     .map(toPublicRound);
 
   res.json({
@@ -72,7 +73,7 @@ app.post('/api/mini-golf/scores', (req, res) => {
   const trimmedRounds = rounds
     .slice()
     .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
-    .slice(0, maxLeaderboardEntries);
+    .slice(0, maxStoredRounds);
 
   fs.writeFileSync(leaderboardFile, JSON.stringify(trimmedRounds, null, 2), 'utf8');
 
@@ -311,6 +312,16 @@ function normalizePlayers(round) {
 
 function createId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function readPositiveIntEnv(name, fallback) {
+  const value = Number(process.env[name]);
+
+  if (Number.isInteger(value) && value > 0) {
+    return value;
+  }
+
+  return fallback;
 }
 
 module.exports = { app };

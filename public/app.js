@@ -16,7 +16,11 @@ const elements = {};
 const STORAGE_KEY = 'vrinfini-mini-golf-drafts-v5';
 const COOKIE_NAME = 'minigolf_session';
 const COOKIE_MAX_AGE = 86400; // 24 h
+const DEFAULT_REMOTE_API_BASE = 'https://vrinfini.com/wp-json/vrinfini-minigolf/v1';
+const LOCAL_API_BASE = '/api/mini-golf';
+const API_BASE = (window.VRI_MINIGOLF_API_BASE || getDefaultApiBase()).replace(/\/$/, '');
 let leaderboardRefreshTimer = null;
+let isSubmittingRound = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
   cacheElements();
@@ -116,7 +120,7 @@ function bindEvents() {
 
 async function loadConfig() {
   try {
-    const response = await fetch('/api/mini-golf/config');
+    const response = await fetch(apiUrl('/config'));
     if (!response.ok) {
       return;
     }
@@ -131,7 +135,7 @@ async function loadConfig() {
 
 async function loadLeaderboard(showStatus = false) {
   try {
-    const response = await fetch('/api/mini-golf/leaderboard');
+    const response = await fetch(apiUrl('/leaderboard'));
     if (!response.ok) {
       throw new Error('Classement indisponible');
     }
@@ -352,6 +356,10 @@ function renderSummary() {
 }
 
 async function submitRound() {
+  if (isSubmittingRound) {
+    return;
+  }
+
   const payload = {
     teamName: state.teamName,
     players: state.players.map((player) => ({
@@ -361,10 +369,11 @@ async function submitRound() {
   };
 
   elements.submitScore.disabled = true;
+  isSubmittingRound = true;
   setStatus('Envoi du score...', '');
 
   try {
-    const response = await fetch('/api/mini-golf/scores', {
+    const response = await fetch(apiUrl('/scores'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -391,6 +400,7 @@ async function submitRound() {
     elements.editScore.classList.remove('hidden');
   } finally {
     elements.submitScore.disabled = false;
+    isSubmittingRound = false;
   }
 }
 
@@ -693,6 +703,15 @@ function capitalizeFirst(value) {
   }
 
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function getDefaultApiBase() {
+  const localHosts = ['localhost', '127.0.0.1'];
+  return localHosts.includes(window.location.hostname) ? LOCAL_API_BASE : DEFAULT_REMOTE_API_BASE;
+}
+
+function apiUrl(path) {
+  return `${API_BASE}${path}`;
 }
 
 function normalizeName(value) {
