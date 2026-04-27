@@ -17,6 +17,7 @@ const serverProcess = spawn(process.execPath, ['mini-golf-score-app/server.js'],
     ...process.env,
     PORT: String(port),
     MINIGOLF_LEADERBOARD_FILE: tempLeaderboardFile,
+    MINIGOLF_USE_WORDPRESS_API: '0',
   },
   stdio: ['ignore', 'pipe', 'pipe'],
 });

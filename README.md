@@ -71,7 +71,15 @@ Si le plugin WordPress `VR Infini Mini Golf Scores` est installe, l'app utilise 
 https://vrinfini.com/wp-json/vrinfini-minigolf/v1
 ```
 
-Les scores sont alors stockes dans la base WordPress au lieu du disque Render. Le ZIP du plugin installe est genere localement dans le dossier :
+Les scores sont alors stockes dans la base WordPress au lieu du disque Render. Le serveur Node relaie aussi les anciennes requetes `/api/mini-golf/scores` vers WordPress, afin que les appareils qui ont garde une ancienne version en cache enregistrent quand meme les scores au bon endroit.
+
+Pour desactiver ce relais en local :
+
+```text
+MINIGOLF_USE_WORDPRESS_API=0
+```
+
+Le ZIP du plugin installe est genere localement dans le dossier :
 
 ```text
 wordpress-plugins/vri-minigolf-scores-v2.zip

@@ -12,6 +12,10 @@ const maxStoredRounds = readPositiveIntEnv('MINIGOLF_MAX_STORED_ROUNDS', 5000);
 const publicRecentRounds = readPositiveIntEnv('MINIGOLF_PUBLIC_RECENT_ROUNDS', 50);
 const ADMIN_KEY = process.env.ADMIN_KEY || 'hydra';
 const wordpressScoresAdminUrl = 'https://vrinfini.com/wp-admin/admin.php?page=vri-minigolf-scores';
+const defaultWordPressApiBase = 'https://vrinfini.com/wp-json/vrinfini-minigolf/v1';
+const wordpressApiBase = process.env.MINIGOLF_USE_WORDPRESS_API === '0'
+  ? ''
+  : normalizeApiBase(process.env.MINIGOLF_WORDPRESS_API_BASE || defaultWordPressApiBase);
 
 function requireAdmin(req, res, next) {
   const auth = req.headers['authorization'] || '';
@@ -49,7 +53,11 @@ app.get('/api/mini-golf/health', (_req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/mini-golf/leaderboard', (_req, res) => {
+app.get('/api/mini-golf/leaderboard', async (_req, res) => {
+  if (wordpressApiBase) {
+    return proxyWordPressJson(res, '/leaderboard');
+  }
+
   const rounds = readRounds();
   const monthlyRounds = filterRoundsForCurrentMonth(rounds);
   const leaderboard = buildLeaderboard(monthlyRounds);
@@ -67,7 +75,14 @@ app.get('/api/mini-golf/leaderboard', (_req, res) => {
   });
 });
 
-app.post('/api/mini-golf/scores', (req, res) => {
+app.post('/api/mini-golf/scores', async (req, res) => {
+  if (wordpressApiBase) {
+    return proxyWordPressJson(res, '/scores', {
+      method: 'POST',
+      body: JSON.stringify(req.body),
+    });
+  }
+
   const parsed = parseRound(req.body);
 
   if (!parsed.ok) {
@@ -318,6 +333,33 @@ function normalizePlayers(round) {
 
 function createId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function normalizeApiBase(value) {
+  return String(value || '').replace(/\/$/, '');
+}
+
+async function proxyWordPressJson(res, pathName, options = {}) {
+  try {
+    const response = await fetch(`${wordpressApiBase}${pathName}`, {
+      method: options.method || 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(options.headers || {}),
+      },
+      body: options.body,
+    });
+    const body = await response.text();
+
+    res.status(response.status);
+    res.type(response.headers.get('content-type') || 'application/json');
+    return res.send(body);
+  } catch (error) {
+    console.error('WordPress mini-golf API unavailable:', error.message);
+    return res.status(502).json({
+      error: 'Stockage WordPress indisponible. Reessaie dans quelques secondes.',
+    });
+  }
 }
 
 function readPositiveIntEnv(name, fallback) {
