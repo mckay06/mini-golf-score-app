@@ -11,6 +11,7 @@ const holeCount = 8;
 const maxStoredRounds = readPositiveIntEnv('MINIGOLF_MAX_STORED_ROUNDS', 5000);
 const publicRecentRounds = readPositiveIntEnv('MINIGOLF_PUBLIC_RECENT_ROUNDS', 50);
 const ADMIN_KEY = process.env.ADMIN_KEY || 'hydra';
+const wordpressScoresAdminUrl = 'https://vrinfini.com/wp-admin/admin.php?page=vri-minigolf-scores';
 
 function requireAdmin(req, res, next) {
   const auth = req.headers['authorization'] || '';
@@ -21,6 +22,11 @@ function requireAdmin(req, res, next) {
 ensureStorage();
 
 app.use(express.json({ limit: '200kb' }));
+
+app.get(['/mini-golf/admin', '/mini-golf/admin.html'], (_req, res) => {
+  res.redirect(302, wordpressScoresAdminUrl);
+});
+
 app.use('/mini-golf', express.static(publicDir, { extensions: ['html'] }));
 
 app.get('/', (_req, res) => { res.redirect('/mini-golf'); });
